@@ -1,9 +1,8 @@
 package domain.banks;
 
-import domain.Atm;
-import domain.interfaces.Bank;
+import domain.Bank;
 
-public class IdeaBank extends Atm implements Bank {
+public class IdeaBank extends Bank {
 
     private static final String ATM_MANUFACTURER_NAME = "Diebold incorporated";
     private static final String BANK_NAME = "Idea Bank";

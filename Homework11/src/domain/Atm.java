@@ -1,18 +1,17 @@
 package domain;
 
 import domain.interfaces.AtmBaseOperations;
-import domain.interfaces.AtmManufacturer;
+import domain.interfaces.AtmPrivateOperations;
 
-public abstract class Atm implements AtmManufacturer, AtmBaseOperations {
+public abstract class Atm implements AtmBaseOperations, AtmPrivateOperations {
 
-    private final int banknotes20 = 20;
-    private final int banknotes50 = 50;
-    private final int banknotes100 = 100;
+    private final int quantityBanknotes20;
+    private final int quantityBanknotes50;
+    private final int quantityBanknotes100;
 
-    private int quantityBanknotes20;
-    private int quantityBanknotes50;
-    private int quantityBanknotes100;
-    private boolean operation;
+    private final int[] nominalBanknotes = {20, 50, 100}; //массив имеющихся купюр
+    private final int[] quantitiesWithdrawBanknotes = {0, 0, 0};
+    private int[] quantitiesBanknotes;
 
     public Atm(int quantityBanknotes20, int quantityBanknotes50, int quantityBanknotes100) {
         this.quantityBanknotes20 = quantityBanknotes20;
@@ -20,132 +19,84 @@ public abstract class Atm implements AtmManufacturer, AtmBaseOperations {
         this.quantityBanknotes100 = quantityBanknotes100;
     }
 
-    public int getQuantityBanknotes20() {
-        return quantityBanknotes20;
+    public int[] getNominalBanknotes() {
+        return nominalBanknotes;
     }
 
-    public int getQuantityBanknotes50() {
-        return quantityBanknotes50;
+    public int[] getQuantitiesWithdrawBanknotes() {
+        return quantitiesWithdrawBanknotes;
     }
 
-    public int getQuantityBanknotes100() {
-        return quantityBanknotes100;
+    public int[] getQuantitiesBanknotes() {
+        return quantitiesBanknotes;
     }
 
-    @Override
     public abstract String getAtmManufacturerName();
 
     @Override
     public boolean addMoney(int sum) {
 
+        boolean operation = true;
+
         if (sum % 10 != 0 || sum == 0) {
+
             operation = false;
+            System.out.println("\n" + new Exception("Incorrect sum"));
 
         } else {
-            while (sum > 0) {
-                sum -= banknotes100;
-                quantityBanknotes100++;
+
+            quantitiesBanknotes = new int[]
+                    {
+                            quantityBanknotes20,
+                            quantityBanknotes50,
+                            quantityBanknotes100
+                    };
+
+            int index = nominalBanknotes.length - 1;
+
+            while (index != -1) {
+                quantitiesBanknotes[index] = quantitiesBanknotes[index] + (sum / nominalBanknotes[index]);
+                sum %= nominalBanknotes[index];
+                index--;
             }
-            if (sum < 0) {
-                sum += banknotes100;
-                quantityBanknotes100--;
-            }
-            while (sum > 0) {
-                sum -= banknotes50;
-                quantityBanknotes50++;
-            }
-            if (sum < 0) {
-                sum += banknotes50;
-                quantityBanknotes50--;
-            }
-            while (sum > 0) {
-                sum -= banknotes20;
-                quantityBanknotes20++;
-            }
-            operation = true;
+
         }
 
-        showQuantityBanknotes(
-                quantityBanknotes20,
-                quantityBanknotes50,
-                quantityBanknotes100
-        );
         return operation;
     }
 
     @Override
     public boolean withdrawMoney(int sum) {
-        int quantityAllBanknotes = banknotes20 * quantityBanknotes20
-                + banknotes50 * quantityBanknotes50
-                + banknotes100 * quantityBanknotes100;
+
+        boolean operation = true;
+        int quantityAllBanknotes =
+                20 * quantitiesBanknotes[0]
+                        + 50 * quantitiesBanknotes[1]
+                        + 100 * quantitiesBanknotes[2];
 
         if (quantityAllBanknotes < sum || sum % 10 != 0 || sum == 0) {
+
             operation = false;
             System.out.println("\n" + new Exception("Not enough money"));
+
         } else {
-            while (sum > 0 && quantityBanknotes100 > 0) {
-                sum -= banknotes100;
-                quantityBanknotes100--;
 
-            }
-            if (sum < 0) {
-                sum += banknotes100;
-                quantityBanknotes100++;
-            }
+            int index = nominalBanknotes.length - 1;
 
-            while (sum > 0 && quantityBanknotes50 > 0) {
-                sum -= banknotes50;
-                quantityBanknotes50--;
-
-            }
-            if (sum < 0) {
-                sum += banknotes50;
-                quantityBanknotes50++;
+            while (index != -1) {
+                quantitiesBanknotes[index] = quantitiesBanknotes[index] - (sum / nominalBanknotes[index]);
+                sum %= nominalBanknotes[index];
+                index--;
             }
 
-            while (sum > 0 && quantityBanknotes20 > 0) {
-                sum -= banknotes20;
-                quantityBanknotes20--;
-
-            }
-
-            operation = true;
         }
 
-        showQuantityBanknotes(
-                quantityBanknotes20,
-                quantityBanknotes50,
-                quantityBanknotes100
-        );
-
         return operation;
+
     }
 
-    public void showWithdrawQuantityBanknotes(
-            int amountBanknotes20,
-            int amountBanknotes50,
-            int amountBanknotes100
-    ) {
-        System.out.println(
-                "Issued banknotes" + "\n"
-                        + "banknotes 20: " + amountBanknotes20 + "\n"
-                        + "banknotes 50: " + amountBanknotes50 + "\n"
-                        + "banknotes 100: " + amountBanknotes100
-        );
+    @Override
+    public boolean privateWithdrawMoney(int sum) {
+        return false;
     }
-
-    private void showQuantityBanknotes(
-            int amountBanknotes20,
-            int amountBanknotes50,
-            int amountBanknotes100
-    ) {
-        System.out.println(
-                "Balance banknotes in bank" + "\n"
-                        + "banknotes 20: " + amountBanknotes20 + "\n"
-                        + "banknotes 50: " + amountBanknotes50 + "\n"
-                        + "banknotes 100: " + amountBanknotes100
-        );
-    }
-
-
 }
