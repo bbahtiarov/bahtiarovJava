@@ -5,9 +5,7 @@ public class Atm {
     private final int quantityBanknotes20;
     private final int quantityBanknotes50;
     private final int quantityBanknotes100;
-
     private final int[] nominalBanknotes = {20, 50, 100}; //массив имеющихся купюр
-    private final int[] quantitiesWithdrawBanknotes = {0, 0, 0};
     private int[] quantitiesBanknotes;
 
     public Atm(int quantityBanknotes20, int quantityBanknotes50, int quantityBanknotes100) {
@@ -18,10 +16,6 @@ public class Atm {
 
     public int[] getNominalBanknotes() {
         return nominalBanknotes;
-    }
-
-    public int[] getQuantitiesWithdrawBanknotes() {
-        return quantitiesWithdrawBanknotes;
     }
 
     public int[] getQuantitiesBanknotes() {
@@ -59,23 +53,17 @@ public class Atm {
         return operation;
     }
 
-    public boolean withdrawMoney(int sum) {
+    public int[] withdrawMoney(int sum) {
 
-        boolean operation = true;
-        int quantityAllBanknotes =
-                20 * quantitiesBanknotes[0]
-                        + 50 * quantitiesBanknotes[1]
-                        + 100 * quantitiesBanknotes[2];
+        final int[] quantitiesWithdrawBanknotes = {0, 0, 0};
 
-        if (quantityAllBanknotes < sum || sum % 10 != 0 || sum == 0) {
+        if (sum % 10 != 0 || sum == 0) {
 
-            operation = false;
             System.out.println("\n" + new Exception("Not enough money"));
 
         } else {
 
-            for (int i = nominalBanknotes.length - 1; i >= 0; --i)
-            {
+            for (int i = nominalBanknotes.length - 1; i >= 0; --i) {
                 quantitiesWithdrawBanknotes[i] = sum / nominalBanknotes[i];
                 quantitiesBanknotes[i] = quantitiesBanknotes[i] - quantitiesWithdrawBanknotes[i];
                 sum = sum - nominalBanknotes[i] * quantitiesWithdrawBanknotes[i];
@@ -83,7 +71,7 @@ public class Atm {
 
         }
 
-        return operation;
+        return quantitiesWithdrawBanknotes;
     }
 
 }

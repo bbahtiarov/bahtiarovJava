@@ -14,10 +14,6 @@ public class Main {
         atm.addMoney(inputAddAmount);
         showAtmBalance(atm);
 
-        System.out.println("Введите количество денег для снятия из банкомата.");
-        Scanner wdAmountScanner = new Scanner(System.in);
-        int inputWithdrawAmount = wdAmountScanner.nextInt();
-        atm.withdrawMoney(inputWithdrawAmount);
         showQuantitiesBanknotes(atm);
 
     }
@@ -35,24 +31,28 @@ public class Main {
         }
     }
 
-    private static void showQuantitiesBanknotes(Atm atmTest) {
+    private static void showQuantitiesBanknotes(Atm atm) {
 
-        for (int i = 0; i < atmTest.getNominalBanknotes().length; i++)
+        System.out.println("Введите количество денег для снятия из банкомата.");
+        Scanner wdAmountScanner = new Scanner(System.in);
+        int inputWithdrawAmount = wdAmountScanner.nextInt();
+
+        for (int i = 0; i < atm.getNominalBanknotes().length; i++)
         {
 
-            if (atmTest.getQuantitiesWithdrawBanknotes()[i] == 0)
+            if (atm.withdrawMoney(inputWithdrawAmount)[i] == 0)
             {
                 continue;
             }
 
             System.out.print(
-                    "Выдано " + atmTest.getQuantitiesWithdrawBanknotes()[i]
+                    "Выдано " + atm.withdrawMoney(inputWithdrawAmount)[i]
                             + " купюр номинала "
-                            + atmTest.getNominalBanknotes()[i] + "\n"
+                            + atm.getNominalBanknotes()[i] + "\n"
             );
 
         }
 
     }
-
+    
 }
