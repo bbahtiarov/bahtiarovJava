@@ -2,16 +2,11 @@ package domain;
 
 public class Atm {
 
-    private final int quantityBanknotes20;
-    private final int quantityBanknotes50;
-    private final int quantityBanknotes100;
-    private final int[] nominalBanknotes = {20, 50, 100}; //массив имеющихся купюр
-    private int[] quantitiesBanknotes;
+    private final int[] nominalBanknotes = {20, 50, 100};
+    private final int[] quantitiesBanknotes;
 
     public Atm(int quantityBanknotes20, int quantityBanknotes50, int quantityBanknotes100) {
-        this.quantityBanknotes20 = quantityBanknotes20;
-        this.quantityBanknotes50 = quantityBanknotes50;
-        this.quantityBanknotes100 = quantityBanknotes100;
+        quantitiesBanknotes = new int[]{quantityBanknotes20, quantityBanknotes50, quantityBanknotes100};
     }
 
     public int[] getNominalBanknotes() {
@@ -32,13 +27,6 @@ public class Atm {
             System.out.println("\n" + new Exception("Incorrect sum"));
 
         } else {
-
-            quantitiesBanknotes = new int[]
-                    {
-                            quantityBanknotes20,
-                            quantityBanknotes50,
-                            quantityBanknotes100
-                    };
 
             int index = nominalBanknotes.length - 1;
 

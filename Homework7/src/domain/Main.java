@@ -6,7 +6,7 @@ public class Main {
     
     public static void main(String[] arg) {
 
-        Atm atm = new Atm(0, 0, 0);
+        Atm atm = new Atm(10, 10, 10);
 
         System.out.println("Введите количество денег для внесения в банкомат.");
         Scanner addAmountScanner = new Scanner(System.in);
@@ -54,5 +54,4 @@ public class Main {
         }
 
     }
-    
 }
